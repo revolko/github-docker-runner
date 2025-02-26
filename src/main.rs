@@ -40,8 +40,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let github_pat =
         env::var("GITHUB_FINE_GRAINED").expect("GitHub Fine Personal Access Token is not set.");
     let api_client = Client::new();
-    let jit_token =
-        get_jit_runner_token(&api_client, &github_pat, "revolko/github-docker-runner").await?;
+    let repo_name = "revolko/github-docker-runner";
+    let jit_token = get_jit_runner_token(&api_client, &github_pat, repo_name).await?;
     println!("{}", jit_token.token);
 
     let resp = get_tenant_creds(
@@ -52,7 +52,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     .await?;
     println!("{:?}", resp);
 
-    let resp = get_runners(&api_client, &github_pat, "revolko/github-docker-runner").await?;
+    let resp = get_runners(&api_client, &github_pat, repo_name).await?;
     println!("{:?}", resp);
 
     return Ok(());

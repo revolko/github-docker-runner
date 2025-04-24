@@ -14,14 +14,14 @@ static GITHUB_API_URL: &str = "https://api.github.com";
 static GITHUB_URL: &str = "https://github.com";
 static MY_USER_AGENT: &str = "docker-runner";
 
-async fn get_runner_groups(
+async fn register_runner(
     api_client: &Client,
     token: &str,
     repo_name: &str,
 ) -> Result<String, Box<dyn Error>> {
     let resp = api_client
         .get(format!(
-            "{GITHUB_API_URL}/repos/{repo_name}/actions/runner-groups"
+            "{GITHUB_API_URL}/repos/{repo_name}/actions/runners/register"
         ))
         .header(USER_AGENT, MY_USER_AGENT)
         .header(ACCEPT, "application/vnd.github+json")
@@ -52,7 +52,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     .await?;
     println!("{:?}", resp);
 
-    let resp = get_runner_groups(&api_client, &resp.token, repo_name).await?;
+    let resp = register_runner(&api_client, &jit_token.token, repo_name).await?;
     println!("{:?}", resp);
 
     return Ok(());
